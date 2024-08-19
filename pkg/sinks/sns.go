@@ -9,9 +9,10 @@ import (
 )
 
 type SNSConfig struct {
-	TopicARN string                 `yaml:"topicARN"`
-	Region   string                 `yaml:"region"`
-	Layout   map[string]interface{} `yaml:"layout"`
+	TopicARN       string                 `yaml:"topicARN"`
+	Region         string                 `yaml:"region"`
+	MessageGroupId string                 `yaml:"MessageGroupId"`
+	Layout         map[string]interface{} `yaml:"layout"`
 }
 
 type SNSSink struct {
@@ -40,10 +41,16 @@ func (s *SNSSink) Send(ctx context.Context, ev *kube.EnhancedEvent) error {
 		return e
 	}
 
-	_, err := s.svc.PublishWithContext(ctx, &sns.PublishInput{
-		Message:  aws.String(string(toSend)),
-		TopicArn: aws.String(s.cfg.TopicARN),
-	})
+    input := &sns.PublishInput{
+        Message:  aws.String(string(toSend)),
+        TopicArn: aws.String(s.cfg.TopicARN),
+    }
+
+	if s.cfg.MessageGroupId != "" {
+        input.MessageGroupId = aws.String(s.cfg.MessageGroupId)
+    }
+
+	_, err := s.svc.PublishWithContext(ctx, input)
 
 	return err
 }
