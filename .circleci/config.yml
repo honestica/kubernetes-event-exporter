@@ -2,9 +2,21 @@ version: 2.1
 orbs:
   bot: lifen/bot@0
 jobs:
+  test:
+    docker:
+      - image: cimg/go:1.24
+    steps:
+      - checkout
+      - run:
+          name: Install gotestsum
+          command: |
+            curl -sSL "https://github.com/gotestyourself/gotestsum/releases/download/v1.12.0/gotestsum_1.12.0_linux_amd64.tar.gz" | sudo tar -xz -C /usr/local/bin gotestsum
+      - run:
+          name: Run tests
+          command: gotestsum --format testname -- -v ./...
   build:
     docker:
-      - image: cimg/python:3.12.5
+      - image: cimg/go:1.24
     steps:
       - checkout
       - bot/docker-build-and-push:
@@ -13,9 +25,13 @@ workflows:
   version: 2
   build:
     jobs:
+      - test:
+          context: org-global
       - build:
           context: org-global
+          requires:
+            - test
           filters:
             branches:
-              only: 
+              only:
                 - master
