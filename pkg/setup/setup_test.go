@@ -23,7 +23,7 @@ func Test_ParseConfigFromBytes_ExampleConfigIsCorrect(t *testing.T) {
 	assert.NotEmpty(t, config.Route.Routes)
 	assert.Equal(t, 4, len(config.Route.Routes))
 	assert.NotEmpty(t, config.Receivers)
-	assert.Equal(t, 10, len(config.Receivers))
+	assert.Equal(t, 11, len(config.Receivers))
 }
 
 func Test_ParseConfigFromBytes_NoErrors(t *testing.T) {
