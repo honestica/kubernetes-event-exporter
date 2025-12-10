@@ -35,3 +35,23 @@ workflows:
             branches:
               only:
                 - master
+  daily_sast_scan: # DO NOT CHANGE THE WORKFLOW NAME
+    triggers:
+      - schedule:
+          cron: "0 1 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - bot/sast:
+          context: org-global
+
+  sast_scan:
+    jobs:
+      - bot/sast:
+          context: org-global
+          filters:
+            branches:
+              ignore:
+                - master
