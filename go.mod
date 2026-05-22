@@ -9,7 +9,7 @@ require (
 	github.com/Shopify/sarama v1.37.2
 	github.com/aws/aws-sdk-go v1.44.162
 	github.com/elastic/go-elasticsearch/v7 v7.17.7
-	github.com/goccy/go-yaml v1.11.0
+	github.com/goccy/go-yaml v1.15.17
 	github.com/hashicorp/golang-lru v0.5.3
 	github.com/linkedin/goavro/v2 v2.12.0
 	github.com/opensearch-project/opensearch-go v1.1.0
@@ -68,7 +68,6 @@ require (
 	github.com/eapache/go-xerial-snappy v0.0.0-20180814174437-776d5712da21 // indirect
 	github.com/eapache/queue v1.1.0 // indirect
 	github.com/emicklei/go-restful/v3 v3.10.1 // indirect
-	github.com/fatih/color v1.16.0 // indirect
 	github.com/go-kit/log v0.2.1 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
 	github.com/go-logr/logr v1.4.3 // indirect
