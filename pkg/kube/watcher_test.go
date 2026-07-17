@@ -270,6 +270,33 @@ func TestOnEvent_WithObjectMetadata(t *testing.T) {
 	}, event.InvolvedObject.OwnerReferences)
 }
 
+func TestOnUpdate_WhenCountIncreases(t *testing.T) {
+	metricsStore := metrics.NewMetricsStore("test_")
+	defer metrics.DestroyMetricsStore(metricsStore)
+	ew := newMockEventWatcher(300, metricsStore)
+
+	processed := 0
+	ew.fn = func(e *EnhancedEvent) { processed++ }
+
+	startup := time.Now().Add(-10 * time.Minute)
+	ew.setStartUpTime(startup)
+
+	base := corev1.Event{
+		ObjectMeta:    metav1.ObjectMeta{Name: "event1"},
+		LastTimestamp: metav1.Time{Time: time.Now()},
+		InvolvedObject: corev1.ObjectReference{UID: "test", Name: "test-1"},
+		Count:         1,
+	}
+	updated := base
+	updated.Count = 2
+
+	ew.OnUpdate(&base, &updated)
+	assert.Equal(t, 1, processed, "count increase should trigger onEvent")
+
+	ew.OnUpdate(&updated, &updated)
+	assert.Equal(t, 1, processed, "same count (informer resync) should not trigger onEvent")
+}
+
 func TestOnEvent_DeletedObjects(t *testing.T) {
 	metricsStore := metrics.NewMetricsStore("test_")
 	defer metrics.DestroyMetricsStore(metricsStore)

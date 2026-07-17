@@ -63,7 +63,11 @@ func (e *EventWatcher) OnAdd(obj interface{}) {
 }
 
 func (e *EventWatcher) OnUpdate(oldObj, newObj interface{}) {
-	// Ignore updates
+	oldEvent := oldObj.(*corev1.Event)
+	newEvent := newObj.(*corev1.Event)
+	if newEvent.Count > oldEvent.Count {
+		e.onEvent(newEvent)
+	}
 }
 
 // Ignore events older than the maxEventAgeSeconds
